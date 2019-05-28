@@ -1,4 +1,7 @@
 #include "LogUtil.h"
+
+#include <stdarg.h>
+
 #include "AsyncLogging.h"
 
 static AsyncLogging log("log.conf");
