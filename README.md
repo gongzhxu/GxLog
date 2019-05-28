@@ -14,7 +14,6 @@ AutoRm=15
 3.例子代码
 
 #include "LogUtil.h"
-
 int main(int argc, char * argv[])
 {
         LOG_RAW("this is log raw");
