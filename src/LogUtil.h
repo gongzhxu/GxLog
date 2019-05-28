@@ -1,5 +1,5 @@
-#ifndef _BASE_UTIL_H_
-#define _BASE_UTIL_H_
+#ifndef _LOG_UTIL_H_
+#define _LOG_UTIL_H_
 
 namespace GxLog
 {
@@ -33,5 +33,5 @@ namespace GxLog
 
 #endif // 0
 
-#endif // _BASE_UTIL_H_
+#endif // _LOG_UTIL_H_
 
