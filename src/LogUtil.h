@@ -1,8 +1,6 @@
 #ifndef _BASE_UTIL_H_
 #define _BASE_UTIL_H_
 
-#include <stdarg.h>
-
 namespace GxLog
 {
     void log_raw(const char * fmt, ...);
