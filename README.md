@@ -32,3 +32,4 @@ this is log raw
 20190528 19:42:45.081718 [ERROR][39898] - this is log error -- <main.cpp,10,main>  
 20190528 19:42:45.081719 [FATAL][39898] - this is log fatal -- <main.cpp,11,main>  
 log thread exit!!! 
+  
