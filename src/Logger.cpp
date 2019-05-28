@@ -21,17 +21,14 @@ const char * LogLevelName[Logger::NUM_LEVELS] =
     "FATAL",
 };
 
-Logger::Logger(const char * fmt, ...):
+Logger::Logger(const char * fmt, va_list arglist):
     file_(""),
     raw_(true)
 {
-    va_list arglist;
-    va_start(arglist, fmt);
     base::vsprintfex(content_, fmt, arglist);
-    va_end(arglist);
 }
 
-Logger::Logger(LogLevel level, const char * file, int line, const char * func, const char * fmt, ...):
+Logger::Logger(LogLevel level, const char * file, int line, const char * func, const char * fmt, va_list arglist):
     level_(level),
     tid_(CurrentThread::tid()),
     file_(file),
@@ -40,11 +37,7 @@ Logger::Logger(LogLevel level, const char * file, int line, const char * func, c
     raw_(false)
 {
     formatTime();
-
-    va_list arglist;
-    va_start(arglist, fmt);
     base::vsprintfex(content_, fmt, arglist);
-    va_end(arglist);
 }
 
 Logger::~Logger()

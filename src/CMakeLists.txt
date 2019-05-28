@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-PROJECT(base)
+PROJECT(GxLog)
 
 AUX_SOURCE_DIRECTORY(./ SRC_LIST1)
 

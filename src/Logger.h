@@ -76,8 +76,8 @@ public:
         NUM_LEVELS
     };
 
-    Logger(const char * fmt, ...);
-    Logger(LogLevel level, const char * file, int line, const char * func, const char * fmt, ...);
+    Logger(const char * fmt, va_list arglist);
+    Logger(LogLevel level, const char * file, int line, const char * func, const char * fmt, va_list arglist);
     ~Logger();
 
     LogLevel level() const { return level_; }

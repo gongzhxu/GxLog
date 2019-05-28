@@ -36,3 +36,4 @@ namespace GxLog
 #endif // 0
 
 #endif // _BASE_UTIL_H_
+

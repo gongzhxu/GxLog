@@ -1,4 +1,4 @@
-#include "BaseUtil.h"
+#include "LogUtil.h"
 #include "AsyncLogging.h"
 
 static AsyncLogging log("log.conf");
@@ -67,3 +67,4 @@ void GxLog::log_fatal(const char * file, int line, const char * func, const char
     log.append(MakeLoggerPtr(Logger::FATAL, file, line, func, fmt, arglist));
     va_end(arglist);
 }
+
