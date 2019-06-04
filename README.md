@@ -11,7 +11,7 @@ Name=default
 RollSize=1000000  
 AutoRm=15  
 
-3.例子代码
+3.例子代码main.cpp
 
 #include "LogUtil.h"  
   
@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
         LOG_FATAL("this is log fatal");   
 }
 
-gcc mian.cpp -std=c++11 -I./GxLog/src -L./GxLog/src -lGxLog -lstdc++ -lpthread -o main
+gcc main.cpp -std=c++11 -I./GxLog/src -L./GxLog/src -lGxLog -lstdc++ -lpthread -o main
 
 输出：
 this is log raw  
