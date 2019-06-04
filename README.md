@@ -26,6 +26,8 @@ int main(int argc, char * argv[])
         LOG_FATAL("this is log fatal");   
 }
 
+gcc mian.cpp -std=c++11 -I./GxLog/src -L./GxLog/src -lGxLog -lstdc++ -lpthread -o main
+
 输出：
 this is log raw  
 20190528 19:42:45.081697 [INFO ][39898] - this is log info -- <main.cpp,8,main>  
