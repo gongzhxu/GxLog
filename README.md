@@ -44,5 +44,5 @@ this is log raw
 20190605 10:36:46.595259 [INFO ][46007] - this is log info 4 -- <main.cpp,17,main>  
 20190605 10:36:46.595261 [INFO ][46007] - this is log info 123 -- <main.cpp,18,main>  
 this is log raw 1  
-this is log raw 456  
+this is log raw 456   
   
