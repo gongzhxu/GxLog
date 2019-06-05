@@ -75,7 +75,7 @@ private:
 
         bool fopen()
         {
-            if(!fp_ || !base::isFile(filename_))
+            if(!fp_ || !GxLog::isFile(filename_))
             {
                 fclose();
                 fp_ = ::fopen(filename_.c_str(), "a");

@@ -11,7 +11,7 @@ std::string TimeStamp::format() const
     int microseconds = this->microseconds()%(1000*1000);
     struct tm tmtime_;
     gmtime_r(&seconds, &tmtime_);
-    base::sprintfex(strTime, "%4d%02d%02d %02d:%02d:%02d.%06d",
+    GxLog::sprintfex(strTime, "%4d%02d%02d %02d:%02d:%02d.%06d",
                         tmtime_.tm_year + 1900, tmtime_.tm_mon + 1, tmtime_.tm_mday,
                         tmtime_.tm_hour, tmtime_.tm_min, tmtime_.tm_sec, microseconds);
     return strTime;
