@@ -16,7 +16,7 @@ AutoRm=15
 #include "LogUtil.h"  
 
 int main(int argc, char * argv[])  
-{
+{  
         LOG_RAW("Raw", "this is log raw");  
         LOG_TRACE("Trace", "this is log trace");  
         LOG_DEBUG("Debug", "this is log debug");  
@@ -26,6 +26,7 @@ int main(int argc, char * argv[])
         LOG_FATAL("Fatal", "this is log fatal");  
         SLOG_RAW("Raw") << "this is log raw " << 1;  
         SLOG_RAW("Raw") << "this is log raw " << 456;  
+        //    
         SLOG_TRACE("Trace") << "this is log trace " << 2;  
         SLOG_DEBUG("Debug") << "this is log debug " << 3;  
         SLOG_INFO("Info") << "this is log info " << 4;  
