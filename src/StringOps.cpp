@@ -2,7 +2,7 @@
 
 #include <stdarg.h>
 
-void base::sprintfex(std::string & str, const char * format, ...)
+void GxLog::sprintfex(std::string & str, const char * format, ...)
 {
     int len = 0;
     va_list arglist1, arglist2;
@@ -26,7 +26,7 @@ void base::sprintfex(std::string & str, const char * format, ...)
     va_end(arglist2);
 }
 
-std::string base::strprintfex(const char * format, ...)
+std::string GxLog::strprintfex(const char * format, ...)
 {
     std::string str;
 
@@ -54,7 +54,7 @@ std::string base::strprintfex(const char * format, ...)
     return str;
 }
 
-void base::vsprintfex(std::string & str, const char * format, va_list arglist)
+void GxLog::vsprintfex(std::string & str, const char * format, va_list arglist)
 {
     int len = 0;
     va_list arglist1;
@@ -76,7 +76,7 @@ void base::vsprintfex(std::string & str, const char * format, va_list arglist)
     va_end(arglist1);
 }
 
-std::string base::vstrprintfex(const char * format, va_list arglist)
+std::string GxLog::vstrprintfex(const char * format, va_list arglist)
 {
     std::string str;
 
@@ -101,7 +101,7 @@ std::string base::vstrprintfex(const char * format, va_list arglist)
     return str;
 }
 
-void base::splitex(const std::string & str, const std::string delim, std::vector<std::string> & ret)
+void GxLog::splitex(const std::string & str, const std::string delim, std::vector<std::string> & ret)
 {
     size_t last = 0;
     size_t index=str.find_first_of(delim,last);
@@ -124,7 +124,7 @@ void base::splitex(const std::string & str, const std::string delim, std::vector
     }
 }
 
-std::string base::splitex(const std::string & str, const std::string delim, int n)
+std::string GxLog::splitex(const std::string & str, const std::string delim, int n)
 {
     std::string ret;
     if(n > 0)
@@ -175,7 +175,7 @@ std::string base::splitex(const std::string & str, const std::string delim, int 
     return ret;
 }
 
-std::string base::utf8_substr(const std::string & str, size_t pos, size_t len)
+std::string GxLog::utf8_substr(const std::string & str, size_t pos, size_t len)
 {
     if(len == 0)
     {
@@ -210,40 +210,3 @@ std::string base::utf8_substr(const std::string & str, size_t pos, size_t len)
 
     return str.substr(min, max - min);
 }
-
-
-/*
-const char * base::getformat(uint8_t)
-{
-    return "%" PRIu8;
-}
-
-const char * base::getformat(int16_t)
-{
-    return "%" PRId16;
-}
-
-const char * base::getformat(uint16_t)
-{
-    return "%" PRIu16;
-}
-
-const char * base::getformat(int32_t)
-{
-    return "%" PRId32;
-}
-
-const char * base::getformat(uint32_t)
-{
-    return "%" PRIu32;
-}
-
-const char * base::getformat(int64_t)
-{
-    return "%" PRId64;
-}
-
-const char * base::getformat(uint64_t)
-{
-
-}*/

@@ -11,7 +11,7 @@
 
 #include "StringOps.h"
 
-bool base::isDir(const std::string & path)
+bool GxLog::isDir(const std::string & path)
 {
     struct stat statbuf;
     if(lstat(path.c_str(), &statbuf) == 0)
@@ -21,7 +21,7 @@ bool base::isDir(const std::string & path)
     return false;
 }
 
-bool base::isFile(const std::string & path)
+bool GxLog::isFile(const std::string & path)
 {
     struct stat statbuf;
     if(lstat(path.c_str(), &statbuf) == 0)
@@ -32,12 +32,12 @@ bool base::isFile(const std::string & path)
     return false;
 }
 
-bool base::isSpecialDir(const std::string & path)
+bool GxLog::isSpecialDir(const std::string & path)
 {
     return path == "." || path == "..";
 }
 
-void base::rmFile(const std::string & path)
+void GxLog::rmFile(const std::string & path)
 {
     if(isFile(path))
     {
@@ -58,7 +58,7 @@ void base::rmFile(const std::string & path)
         while((dirInfo = readdir(ptrDir)) != NULL)
         {
             std::string subPath;
-            base::sprintfex(subPath, "%s/%s", path.c_str(), dirInfo->d_name);
+            GxLog::sprintfex(subPath, "%s/%s", path.c_str(), dirInfo->d_name);
             if(isSpecialDir(dirInfo->d_name))
             {
                 continue;
@@ -72,7 +72,7 @@ void base::rmFile(const std::string & path)
     }
 }
 
-std::string base::getPwd()
+std::string GxLog::getPwd()
 {
     char path[PATH_MAX] = {0};
     int len = readlink("/proc/self/exe", path, PATH_MAX);

@@ -76,8 +76,8 @@ public:
         NUM_LEVELS
     };
 
-    Logger(const char * fmt, va_list arglist);
-    Logger(LogLevel level, const char * file, int line, const char * func, const char * fmt, va_list arglist);
+    Logger(const std::string & content);
+    Logger(LogLevel level, const char * file, int line, const char * func, const std::string & content);
     ~Logger();
 
     LogLevel level() const { return level_; }
@@ -88,6 +88,7 @@ private:
     void formatTime();
 
 private:
+    std::string module_;
     LogLevel    level_;
     int         tid_;
     SourceFile  file_;

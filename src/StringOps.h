@@ -9,7 +9,7 @@
 #define SAFE_A2I(data) (data?atoi(data):0)
 #define SAFE_A2L(data) (data?atol(data):0)
 
-namespace base
+namespace GxLog
 {
 
 void sprintfex(std::string & str, const char * format, ...);
@@ -32,7 +32,7 @@ template<typename T>
 std::string toString(const T data)
 {
     char szData[32] = {0};
-    snprintf(szData, sizeof(szData), base::getformat(data), data);
+    snprintf(szData, sizeof(szData), GxLog::getformat(data), data);
     return szData;
 }
 

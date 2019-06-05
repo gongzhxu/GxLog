@@ -1,37 +1,56 @@
 #ifndef _LOG_UTIL_H_
 #define _LOG_UTIL_H_
 
+#include <sstream>
+
 namespace GxLog
 {
-    void log_raw(const char * fmt, ...);
-    void log_trace(const char * file, int line, const char * func, const char * fmt, ...);
-    void log_debug(const char * file, int line, const char * func, const char * fmt, ...);
-    void log_info(const char * file, int line, const char * func, const char * fmt, ...);
-    void log_warn(const char * file, int line, const char * func, const char * fmt, ...);
-    void log_error(const char * file, int line, const char * func, const char * fmt, ...);
-    void log_fatal(const char * file, int line, const char * func, const char * fmt, ...);
+enum LogLevel
+{
+    TRACE,
+    DEBUG,
+    INFO,
+    WARN,
+    ERROR,
+    FATAL,
+    NUM_LEVELS
+};
+
+void log_raw(const char * module, const char * fmt, ...);
+void log_level(const char * module, LogLevel level, const char * file, int line, const char * func, const char * fmt, ...);
+
+class LogStream:public std::stringstream
+{
+public:
+    LogStream(const char * module);
+    LogStream(const char * module, LogLevel level, const char * file, int line, const char * func);
+    ~LogStream();
+private:
+    const char * module_;
+    LogLevel level_;
+    const char * file_;
+    int line_;
+    const char * func_;
+    bool raw_;
+};
+
 }
 
-#if 1
+#define LOG_RAW(module, fmt, args...)   GxLog::log_raw(module, fmt, ##args);
+#define LOG_TRACE(module, fmt, args...) GxLog::log_level(module, GxLog::LogLevel::TRACE, __FILE__, __LINE__, __FUNCTION__, fmt, ##args);
+#define LOG_DEBUG(module, fmt, args...) GxLog::log_level(module, GxLog::LogLevel::DEBUG, __FILE__, __LINE__, __FUNCTION__, fmt, ##args);
+#define LOG_INFO(module, fmt, args...)  GxLog::log_level(module, GxLog::LogLevel::INFO, __FILE__, __LINE__, __FUNCTION__, fmt, ##args);
+#define LOG_WARN(module, fmt, args...)  GxLog::log_level(module, GxLog::LogLevel::WARN, __FILE__, __LINE__, __FUNCTION__, fmt, ##args);
+#define LOG_ERROR(module, fmt, args...) GxLog::log_level(module, GxLog::LogLevel::ERROR, __FILE__, __LINE__, __FUNCTION__, fmt, ##args);
+#define LOG_FATAL(module, fmt, args...) GxLog::log_level(module,  GxLog::LogLevel::FATAL, __FILE__, __LINE__, __FUNCTION__, fmt, ##args);
 
-#define LOG_RAW(fmt, args...)   GxLog::log_raw(fmt, ##args);
-#define LOG_TRACE(fmt, args...) GxLog::log_trace(__FILE__, __LINE__, __FUNCTION__, fmt, ##args);
-#define LOG_DEBUG(fmt, args...) GxLog::log_debug(__FILE__, __LINE__, __FUNCTION__, fmt, ##args);
-#define LOG_INFO(fmt, args...)  GxLog::log_info(__FILE__, __LINE__, __FUNCTION__, fmt, ##args);
-#define LOG_WARN(fmt, args...)  GxLog::log_warn(__FILE__, __LINE__, __FUNCTION__, fmt, ##args);
-#define LOG_ERROR(fmt, args...) GxLog::log_error(__FILE__, __LINE__, __FUNCTION__, fmt, ##args);
-#define LOG_FATAL(fmt, args...) GxLog::log_fatal(__FILE__, __LINE__, __FUNCTION__, fmt, ##args);
-
-#else
-
-#define LOG_TRACE(fmt, args...)
-#define LOG_DEBUG(fmt, args...)
-#define LOG_INFO(fmt, args...)
-#define LOG_WARN(fmt, args...)
-#define LOG_ERROR(fmt, args...)
-#define LOG_FATAL(fmt, args...)
-
-#endif // 0
+#define SLOG_RAW(module) GxLog::LogStream(module)
+#define SLOG_TRACE(module) GxLog::LogStream(module, GxLog::LogLevel::TRACE, __FILE__, __LINE__, __FUNCTION__)
+#define SLOG_DEBUG(module) GxLog::LogStream(module, GxLog::LogLevel::DEBUG, __FILE__, __LINE__, __FUNCTION__)
+#define SLOG_INFO(module) GxLog::LogStream(module, GxLog::LogLevel::INFO, __FILE__, __LINE__, __FUNCTION__)
+#define SLOG_WARN(module) GxLog::LogStream(module, GxLog::LogLevel::WARN, __FILE__, __LINE__, __FUNCTION__)
+#define SLOG_ERROR(module) GxLog::LogStream(module, GxLog::LogLevel::ERROR, __FILE__, __LINE__, __FUNCTION__)
+#define SLOG_FATAL(module) GxLog::LogStream(module, GxLog::LogLevel::FATAL, __FILE__, __LINE__, __FUNCTION__)
 
 #endif // _LOG_UTIL_H_
 

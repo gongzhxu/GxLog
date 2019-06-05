@@ -21,23 +21,23 @@ const char * LogLevelName[Logger::NUM_LEVELS] =
     "FATAL",
 };
 
-Logger::Logger(const char * fmt, va_list arglist):
+Logger::Logger(const std::string & content):
     file_(""),
+    content_(content),
     raw_(true)
 {
-    base::vsprintfex(content_, fmt, arglist);
 }
 
-Logger::Logger(LogLevel level, const char * file, int line, const char * func, const char * fmt, va_list arglist):
+Logger::Logger(LogLevel level, const char * file, int line, const char * func, const std::string & content):
     level_(level),
     tid_(CurrentThread::tid()),
     file_(file),
     line_(line),
     func_(func),
+    content_(content),
     raw_(false)
 {
     formatTime();
-    base::vsprintfex(content_, fmt, arglist);
 }
 
 Logger::~Logger()
@@ -88,11 +88,11 @@ void Logger::format(std::string & data)
 {
     if(raw_)
     {
-        base::sprintfex(data, "%s\n", content_.c_str());
+        GxLog::sprintfex(data, "%s\n", content_.c_str());
     }
     else
     {
-        base::sprintfex(data, "%s [%s][%d] - %s -- <%s,%d,%s>\n",
+        GxLog::sprintfex(data, "%s [%s][%d] - %s -- <%s,%d,%s>\n",
                     time_,
                     LogLevelName[level_],
                     tid_,

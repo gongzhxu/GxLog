@@ -62,14 +62,14 @@ void LogFile::rollFile(const time_t & time)
 void LogFile::rmFile(const time_t & time)
 {
     std::string logPath = getLogPath(time - autoRm_);
-    base::rmFile(logPath.c_str());
+    GxLog::rmFile(logPath.c_str());
 }
 
 std::string LogFile::getLogFileName(const std::string & basename, const time_t & time)
 {
     std::string filename;
 
-    filename = base::getPwd() + logFolder_ + "/";
+    filename = GxLog::getPwd() + logFolder_ + "/";
     mkdir(filename.c_str(), 0755);
 
     char timebuf[32] = {0};
@@ -94,7 +94,7 @@ std::string LogFile::getLogPath(const time_t & time)
     gmtime_r(&time, &tmtime_);
     strftime(timebuf, sizeof(timebuf), "%Y-%m-%d/", &tmtime_);
 
-    logPath = base::getPwd() + logFolder_ + "/" + timebuf;
+    logPath = GxLog::getPwd() + logFolder_ + "/" + timebuf;
     return logPath;
 }
 

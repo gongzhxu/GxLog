@@ -9,8 +9,7 @@
 #define MAX_LOG_BUF_SIZE 1024000
 
 AsyncLogging::AsyncLogging(const char * fileName):
-    running_(true),
-    output_(new LogFile())
+    running_(true)
 {
 
     loadConfig(fileName);
@@ -39,28 +38,28 @@ void AsyncLogging::loadConfig(const char * fileName)
     print_ = cfg["log"]["Print"].asInt32(true);
 
 
-    std::string logFolder = cfg["log"]["Folder"].asString("log");
-    std::string baseName = cfg["log"]["Name"].asString("default");
-    int rollSize = cfg["log"]["RollSize"].asInt32(DEF_ROLLSIZE);
-    int autoRm = cfg["log"]["AutoRm"].asInt32(DEF_AUTORM*DAYILY_SECONDS);//use second
-    if(autoRm < 0)
+    logFolder_ = cfg["log"]["Folder"].asString("log");
+    baseName_ = cfg["log"]["Name"].asString("default");
+    rollSize_ = cfg["log"]["RollSize"].asInt32(DEF_ROLLSIZE);
+    autoRm_ = cfg["log"]["AutoRm"].asInt32(DEF_AUTORM*DAYILY_SECONDS);//use second
+    if(autoRm_ < 0)
     {
-        autoRm = DEF_AUTORM*DAYILY_SECONDS;
+        autoRm_ = DEF_AUTORM*DAYILY_SECONDS;
     }
-
-
-    output_->setLogFolder(logFolder);
-    output_->setBaseName(baseName);
-    output_->setRollSize(rollSize);
-    output_->setFlushInterval(flushInterval_);
-    output_->setAutoRm(autoRm);
 }
 
-void AsyncLogging::append(LoggerPtr && logger)
+void AsyncLogging::append(const char * module, LoggerPtr && logger)
 {
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        loggers_.emplace_back(std::move(logger));
+        if(module == nullptr || strcmp(module, "") == 0)
+        {
+            loggers_[baseName_].emplace_back(std::move(logger));
+        }
+        else
+        {
+            loggers_[module].emplace_back(std::move(logger));
+        }
     }
 
     cond_.notify_one();
@@ -70,7 +69,7 @@ void AsyncLogging::threadFunc()
 {
     while(true)
     {
-        LoggerList loggers;
+        LoggerMap loggers;
 
         {
             std::unique_lock<std::mutex> lock(mutex_);
@@ -79,11 +78,23 @@ void AsyncLogging::threadFunc()
             {
                 if(!running_)
                 {
-                    output_->append("log thread exit!!!\n");
+                    for(auto it = logFiles_.begin(); it != logFiles_.end(); ++it)
+                    {
+                        if(it->second)
+                        {
+                            it->second->append("log thread exit!!!\n");
+                        }
+                    }
                     return;
                 }
 
-                output_->append(NULL, 0);
+                for(auto it = logFiles_.begin(); it != logFiles_.end(); ++it)
+                {
+                    if(it->second)
+                    {
+                        it->second->append(NULL, 0);
+                    }
+                }
                 cond_.wait_for(lock, std::chrono::seconds(flushInterval_));
             }
 
@@ -95,28 +106,42 @@ void AsyncLogging::threadFunc()
         Buffer printBuf; // the screen print buffer
         std::string data;
 
-        for(auto it = loggers.begin(); it != loggers.end();)
+        for(auto it = loggers.begin(); it != loggers.end(); ++it)
         {
-            LoggerPtr pLogger = *(it++);
-            pLogger->format(data);
-
-            outputBuf.append(data.c_str(), data.size());
-            if((print_ && pLogger->level() == Logger::INFO) || pLogger->raw())
+            std::unique_ptr<LogFile> & logFile = logFiles_[it->first];
+            if(logFile == nullptr)
             {
-                printBuf.append(data.c_str(), data.size());
+                logFile.reset(new LogFile());
+                logFile->setLogFolder(logFolder_);
+                logFile->setBaseName(it->first);
+                logFile->setRollSize(rollSize_);
+                logFile->setFlushInterval(flushInterval_);
+                logFile->setAutoRm(autoRm_);
             }
 
-            //write the log buffer to destination
-            if(outputBuf.size() > MAX_LOG_BUF_SIZE || it == loggers.end())
+            for(auto it1 = it->second.begin(); it1 != it->second.end();)
             {
-                output_->append(outputBuf.data(), outputBuf.size());
-                outputBuf.clear();
-            }
+                LoggerPtr pLogger = *(it1++);
+                pLogger->format(data);
 
-            if(printBuf.size() > MAX_LOG_BUF_SIZE || it == loggers.end())
-            {
-                ::fwrite(printBuf.data(), sizeof(char), printBuf.size(), stdout);
-                printBuf.clear();
+                outputBuf.append(data.c_str(), data.size());
+                if((print_ && pLogger->level() == Logger::INFO) || pLogger->raw())
+                {
+                    printBuf.append(data.c_str(), data.size());
+                }
+
+                //write the log buffer to destination
+                if(outputBuf.size() > MAX_LOG_BUF_SIZE || it1 == it->second.end())
+                {
+                    logFile->append(outputBuf.data(), outputBuf.size());
+                    outputBuf.clear();
+                }
+
+                if(printBuf.size() > MAX_LOG_BUF_SIZE || it1 == it->second.end())
+                {
+                    ::fwrite(printBuf.data(), sizeof(char), printBuf.size(), stdout);
+                    printBuf.clear();
+                }
             }
         }
     }

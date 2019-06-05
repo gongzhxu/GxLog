@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace base
+namespace GxLog
 {
 bool isDir(const std::string & path);
 bool isFile(const std::string & path);
