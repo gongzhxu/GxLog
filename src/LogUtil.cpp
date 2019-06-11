@@ -7,7 +7,12 @@
 
 using namespace GxLog;
 
-static AsyncLogging log("log.conf");
+static AsyncLogging & log()
+{
+    static AsyncLogging log("log.conf");
+    return log;
+}
+
 
 void GxLog::log_raw(const char * module, const char * fmt, ...)
 {
@@ -17,12 +22,12 @@ void GxLog::log_raw(const char * module, const char * fmt, ...)
     GxLog::vsprintfex(content, fmt, arglist);
     va_end(arglist);
 
-    log.append(module, MakeLoggerPtr(content));
+    log().append(module, MakeLoggerPtr(content));
 }
 
 void GxLog::log_level(const char * module, GxLog::LogLevel level, const char * file, int line, const char * func, const char * fmt, ...)
 {
-    if(level <= GxLog::LogLevel::INFO && level < log.getLogLevel())
+    if(level <= GxLog::LogLevel::INFO && level < log().getLogLevel())
     {
         return;
     }
@@ -33,7 +38,7 @@ void GxLog::log_level(const char * module, GxLog::LogLevel level, const char * f
     GxLog::vsprintfex(content, fmt, arglist);
     va_end(arglist);
 
-    log.append(module, MakeLoggerPtr((Logger::LogLevel)level, file, line, func, content));
+    log().append(module, MakeLoggerPtr((Logger::LogLevel)level, file, line, func, content));
 }
 
 LogStream::LogStream(const char * module):module_(module), raw_(true)
@@ -49,15 +54,15 @@ LogStream::~LogStream()
 {
     if(raw_)
     {
-        log.append(module_, MakeLoggerPtr(str()));
+        log().append(module_, MakeLoggerPtr(str()));
     }
     else
     {
-        if(level_ <= GxLog::LogLevel::INFO && level_ < log.getLogLevel())
+        if(level_ <= GxLog::LogLevel::INFO && level_ < log().getLogLevel())
         {
             return;
         }
 
-        log.append(module_, MakeLoggerPtr((Logger::LogLevel)level_, file_, line_, func_, str()));
+        log().append(module_, MakeLoggerPtr((Logger::LogLevel)level_, file_, line_, func_, str()));
     }
 }
