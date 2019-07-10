@@ -23,8 +23,7 @@ int main(int argc, char * argv[])
         LOG_INFO("Info", "this is log info");  
         LOG_WARN("Warn", "this is log warn");  
         LOG_ERROR("Error", "this is log error");  
-        LOG_FATAL("Fatal", "this is log fatal");  
-
+        LOG_FATAL("Fatal", "this is log fatal");    
         SLOG_RAW("Raw") << "this is log raw " << 1;  
         SLOG_RAW("Raw") << "this is log raw " << 456;  
         SLOG_TRACE("Trace") << "this is log trace " << 2;  
