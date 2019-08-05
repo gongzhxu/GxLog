@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include "FileOps.h"
+#include "Logger.h"
 
 #define DEF_ROLLSIZE 1024*1024*1024
 #define DEF_FLUSHINTERVAL 1
@@ -25,6 +26,7 @@ public:
 
     void append(const char * logline);
     void append(const char * logline, int len);
+    void append(LoggerPtr & logger);
 
     void setLogFolder(const std::string & logFolder) { logFolder_ = logFolder; }
     void setBaseName(const std::string & baseName) { baseName_ = baseName; }
@@ -45,7 +47,7 @@ private:
             fp_(::fopen(filename_.c_str(), "a")),
             writtenBytes_(0)
             {
-                if(!fp_) fprintf(stderr, "create logfile=%s,error=%s\n", filename_.c_str(), strerror(errno));
+                if(!fp_) ::fprintf(stderr, "create logfile=%s,error=%s\n", filename_.c_str(), strerror(errno));
             }
 
         ~File() { fclose(); }
@@ -61,6 +63,23 @@ private:
 
             writtenBytes_ += len;
             return ::fwrite(logline, 1, len, fp_);
+        }
+
+        size_t fwrite(LoggerPtr & logger)
+        {
+            if(!fopen())
+            {
+                return 0;
+            }
+
+            size_t len = 0;
+            if(logger)
+            {
+                len = logger->format(fp_);
+            }
+
+            writtenBytes_ += len;
+            return len;
         }
 
         void fflush()

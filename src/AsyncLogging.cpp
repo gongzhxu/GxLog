@@ -4,9 +4,6 @@
 
 #include "LogFile.h"
 #include "ConfigParser.h"
-#include "Buffer.h"
-
-#define MAX_LOG_BUF_SIZE 1024000
 
 AsyncLogging::AsyncLogging(const char * fileName):
     running_(true)
@@ -101,11 +98,6 @@ void AsyncLogging::threadFunc()
             loggers.swap(loggers_);
         }
 
-
-        Buffer outputBuf; // the file log buffer
-        Buffer printBuf; // the screen print buffer
-        std::string data;
-
         for(auto it = loggers.begin(); it != loggers.end(); ++it)
         {
             std::unique_ptr<LogFile> & logFile = logFiles_[it->first];
@@ -119,28 +111,15 @@ void AsyncLogging::threadFunc()
                 logFile->setAutoRm(autoRm_);
             }
 
-            for(auto it1 = it->second.begin(); it1 != it->second.end();)
+            for(auto it1 = it->second.begin(); it1 != it->second.end(); ++it1)
             {
-                LoggerPtr pLogger = *(it1++);
-                pLogger->format(data);
+                LoggerPtr logger = *it1;
+                logFile->append(logger);
 
-                outputBuf.append(data.c_str(), data.size());
-                if((print_ && pLogger->level() == Logger::INFO) || pLogger->raw())
-                {
-                    printBuf.append(data.c_str(), data.size());
-                }
 
-                //write the log buffer to destination
-                if(outputBuf.size() > MAX_LOG_BUF_SIZE || it1 == it->second.end())
+                if((print_ && logger->level() == Logger::INFO) || logger->raw())
                 {
-                    logFile->append(outputBuf.data(), outputBuf.size());
-                    outputBuf.clear();
-                }
-
-                if(printBuf.size() > MAX_LOG_BUF_SIZE || it1 == it->second.end())
-                {
-                    ::fwrite(printBuf.data(), sizeof(char), printBuf.size(), stdout);
-                    printBuf.clear();
+                    logger->format(stdout);
                 }
             }
         }

@@ -40,12 +40,10 @@ build(){
     fi
 
 	cd ../../
-	
-	if [ ! -d /usr/local/include/$PROJECT ]; then
-		mkdir /usr/local/include/$PROJECT
-	fi
-	cp -R $PROJECT/*.h /usr/local/include/$PROJECT
-	cp -R $PROJECT/*.a /usr/local/lib
+
+    rm -rf inclue lib	
+    cp -R $PROJECT/LogUtil.h ./include
+    cp -R $PROJECT/*.a ./lib
 }
 
 

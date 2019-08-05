@@ -84,6 +84,7 @@ public:
     bool raw() { return raw_; }
     size_t format(char * data, size_t len);
     void format(std::string & data);
+    size_t format(FILE * fp);
 private:
     void formatTime();
 

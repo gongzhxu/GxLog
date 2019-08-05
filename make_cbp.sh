@@ -15,19 +15,18 @@ check_env(){
 make_cbp(){
 	PROJECT=$1
 
-	mkdir -p $PROJECT/cbp
-	cd $PROJECT/cbp
+	mkdir -p src/cbp
+	cd src/cbp
 	cmake -DCMAKE_BUILD_TYPE=Debug -B. -H../ -G "CodeBlocks - Unix Makefiles"	
 	cd ../../
 }
 
 case $1 in
-	base|dbproxy)
+	GxLog)
 		make_cbp $1
 		;;
 	all)
-		make_cbp base
-		make_cbp dbproxy
+		make_cbp GxLog
 		;;
 	*)
 		print_help

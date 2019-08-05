@@ -47,6 +47,28 @@ void LogFile::append(const char * logline, int len)
     }
 }
 
+void LogFile::append(LoggerPtr & logger)
+{
+    time_t now = time(NULL) + 8*3600;
+
+    struct tm  tmtime_;
+    gmtime_r(&now, &tmtime_);
+    int nowDay = tmtime_.tm_mday;
+    if(fileDay_ != nowDay || !fileObj_ || fileObj_->getWrittenBytes() > rollSize_)
+    {
+        rmFile(now);
+        rollFile(now);
+    }
+
+    fileObj_->fwrite(logger);
+
+    if(now - lastFlush_ > flushInterval_)
+    {
+        lastFlush_ = now;
+        fileObj_->fflush();
+    }
+}
+
 void LogFile::rollFile(const time_t & time)
 {
     std::string filename = getLogFileName(baseName_, time);

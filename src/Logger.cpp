@@ -102,3 +102,27 @@ void Logger::format(std::string & data)
                     func_);
     }
 }
+
+size_t Logger::format(FILE * fp)
+{
+    if(!fp)
+    {
+        return 0;
+    }
+
+    if(raw_)
+    {
+        return fprintf(fp, "%s\n", content_.c_str());
+    }
+    else
+    {
+        return fprintf(fp, "%s [%s][%d] - %s -- <%s,%d,%s>\n",
+                    time_,
+                    LogLevelName[level_],
+                    tid_,
+                    content_.c_str(),
+                    file_.data(),
+                    line_,
+                    func_);
+    }
+}
