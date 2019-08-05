@@ -41,9 +41,10 @@ build(){
 
 	cd ../../
 
-    rm -rf inclue lib	
-    cp -R $PROJECT/LogUtil.h ./include
-    cp -R $PROJECT/*.a ./lib
+    rm -rf inclue lib
+    mkdir include lib
+    cp -R $PROJECT/LogUtil.h ./include/
+    cp -R $PROJECT/*.a ./lib/
 }
 
 
