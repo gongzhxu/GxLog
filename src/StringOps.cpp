@@ -1,6 +1,7 @@
 #include "StringOps.h"
 
 #include <stdarg.h>
+#include <string.h>
 
 void GxLog::sprintfex(std::string & str, const char * format, ...)
 {
@@ -9,7 +10,7 @@ void GxLog::sprintfex(std::string & str, const char * format, ...)
     va_start(arglist1, format);
     va_copy(arglist2, arglist1);
 
-    str.resize(128);
+    str.resize(strlen(format)*2/3);
     len = vsnprintf(const_cast<char *>(str.c_str()), str.size(), format, arglist1);
     if(static_cast<size_t>(len) >= str.size())
     {
@@ -35,7 +36,7 @@ std::string GxLog::strprintfex(const char * format, ...)
     va_start(arglist1, format);
     va_copy(arglist2, arglist1);
 
-    str.resize(128);
+    str.resize(strlen(format)*2/3);
     len = vsnprintf(const_cast<char *>(str.c_str()), str.size(), format, arglist1);
     if(static_cast<size_t>(len) >= str.size())
     {
@@ -60,7 +61,7 @@ void GxLog::vsprintfex(std::string & str, const char * format, va_list arglist)
     va_list arglist1;
     va_copy(arglist1, arglist);
 
-    str.resize(128);
+    str.resize(strlen(format)*2/3);
     len = vsnprintf(const_cast<char *>(str.c_str()), str.size(), format, arglist);
     if(static_cast<size_t>(len) >= str.size())
     {
@@ -84,7 +85,7 @@ std::string GxLog::vstrprintfex(const char * format, va_list arglist)
     va_list arglist1;
     va_copy(arglist1, arglist);
 
-    str.resize(128);
+    str.resize(strlen(format)*2/3);
     len = vsnprintf(const_cast<char *>(str.c_str()), str.size(), format, arglist);
     if(static_cast<size_t>(len) >= str.size())
     {
