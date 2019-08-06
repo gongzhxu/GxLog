@@ -37,7 +37,7 @@ void AsyncLogging::loadConfig(const char * fileName)
 
     logFolder_ = cfg["log"]["Folder"].asString("log");
     baseName_ = cfg["log"]["Name"].asString("default");
-    rollSize_ = cfg["log"]["RollSize"].asInt32(DEF_ROLLSIZE);
+    rollSize_ = cfg["log"]["RollSize"].asInt64(DEF_ROLLSIZE);
     autoRm_ = cfg["log"]["AutoRm"].asInt32(DEF_AUTORM*DAYILY_SECONDS);//use second
     if(autoRm_ < 0)
     {

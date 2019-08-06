@@ -29,13 +29,13 @@ private:
     void threadFunc();
 
 private:
-    int             flushInterval_;
-    int             level_; // log level
+    int32_t         flushInterval_;
+    int32_t         level_; // log level
     bool            print_; // print or not
     std::string     logFolder_;
     std::string     baseName_;
-    int             rollSize_;
-    int             autoRm_;
+    int64_t         rollSize_;
+    int32_t         autoRm_;
 
     bool            running_; // just a flag indicate the thread is running
 

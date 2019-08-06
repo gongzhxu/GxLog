@@ -14,7 +14,7 @@
 #include "FileOps.h"
 #include "Logger.h"
 
-#define DEF_ROLLSIZE 1024*1024*1024
+#define DEF_ROLLSIZE (1024LL*1024*1024)
 #define DEF_FLUSHINTERVAL 1
 #define DEF_AUTORM 15
 #define DAYILY_SECONDS 24*60*60
@@ -112,11 +112,11 @@ private:
     std::string logFolder_;
     std::string baseName_;
     size_t      rollSize_;
-    int         flushInterval_;
-    int         autoRm_;
+    int32_t     flushInterval_;
+    int32_t     autoRm_;
 
     time_t lastFlush_;
-    int fileDay_;
+    int32_t fileDay_;
 
     std::unique_ptr<File> fileObj_;
 };
